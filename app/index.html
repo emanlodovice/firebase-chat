@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Crazy Chat</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+        <div class="header clearfix">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" id="logout" class="hidden"><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Crazy Chat</h3>
+         </div>
+
+        <div class="jumbotron hidden" id="login-section">
+            <h1>Chat</h1>
+            <p class="lead">Let's Chat and have a good time.</p>
+            <p><a class="btn btn-lg btn-success" role="button" id="login">Login</a></p>
+        </div>
+
+        <div class="jumbotron hidden" id="chat">
+            <form id="thread-form">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="" alt="" id="user-avatar">
+                        <span id="user-name"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="thread" id="thread-name" placeholder="Thread Name" />
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success">Join/Create</button>
+                    </div>
+                </div>
+            </form>
+            <div id="thread-container" class="hidden">
+                <div id="thread"></div>
+                <form id="message-form">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" name="message" id="message" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-default">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+    <script src="js/home.js"></script>
+  </body>
+</html>
