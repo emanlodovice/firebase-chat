@@ -100,8 +100,9 @@ function fetchThreadMessages() {
 
 function displayMessages(messageId, message) {
     var container = $('#thread');
-    var message = '<div class="message"><img src="' + message.sender.photoUrl + '"><div class="text-container"><p class="username">' + message.sender.name + '</p><p class="content">' + message.message +'</p></div></div>'
+    var message = '<div class="message"><img src="' + message.sender.photoUrl + '"><div class="text-container"><p class="username">' + message.sender.name + '</p><p class="content">' + message.message + '</p></div></div>'
     container.append(message);
+    container.scrollTop(container[0].scrollHeight);
 }
 
 $('#message-form').on('submit', function(e) {
@@ -114,6 +115,7 @@ $('#message-form').on('submit', function(e) {
             var messageNode = messageRef.push();
             messageNode.set({
                 'message': message,
+                'when': firebase.database.ServerValue.TIMESTAMP,
                 'sender': {
                     'uid': currentUser.uid,
                     'name': currentUser.displayName,
