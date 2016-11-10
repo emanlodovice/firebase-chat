@@ -36,7 +36,7 @@ $('#logout').on('click', function(e) {
     var currentUser = firebase.auth().currentUser;
     if (currentUser !== null) {
         firebase.auth().signOut().then(function() {
-            window.location = '/';
+            // window.location = '/';
         }, function(error) {
             console.log(error);
         });
@@ -88,11 +88,6 @@ function fetchThreadMessages() {
     if (messageRef !== null) {
         $('#thread').empty();
         messageRef.on('child_added', function(data) {
-            // var messages = data.val();
-            // for (var messageId in messages) {
-            //     var message = messages[messageId];
-            //     displayMessages(messageId, message);
-            // }
             displayMessages(data.key, data.val())
         });
     }
@@ -100,8 +95,12 @@ function fetchThreadMessages() {
 
 function displayMessages(messageId, message) {
     var container = $('#thread');
-    var message = '<div class="message"><img src="' + message.sender.photoUrl + '"><div class="text-container"><p class="username">' + message.sender.name + '</p><p class="content">' + message.message + '</p></div></div>'
-    container.append(message);
+    var messageHtml = '<div class="message"><img src="' + message.sender.photoUrl + '" class="prof-image"><div class="text-container"><p class="username">' + message.sender.name + '</p><p class="content">';
+    if ('image_url' in message) {
+        messageHtml += '<img src="' + message.image_url + '"><br/>';
+    }
+    messageHtml += message.message + '</p></div></div>';
+    container.append(messageHtml);
     container.scrollTop(container[0].scrollHeight);
 }
 
@@ -110,10 +109,11 @@ $('#message-form').on('submit', function(e) {
     if (messageRef !== null) {
         var messageBox = $('#message');
         var message = messageBox.val().trim();
-        if (message !== '') {
+        var files = $('#image')[0].files;
+        if (message !== '' || files.length > 0) {
             messageBox.prop('disabled', true);
             var messageNode = messageRef.push();
-            messageNode.set({
+            var data = {
                 'message': message,
                 'when': firebase.database.ServerValue.TIMESTAMP,
                 'sender': {
@@ -121,14 +121,29 @@ $('#message-form').on('submit', function(e) {
                     'name': currentUser.displayName,
                     'photoUrl': currentUser.photoURL,
                 }
-            }).then(function() {
-                messageBox.prop('disabled', false);
-                messageBox.val('');
-            });
+            }
+            if (files.length > 0) {
+                var ref = firebase.storage().ref('/images/' + messageNode.key + '.jpg');
+                ref.put(files[0]).then(function(snapshot) {
+                    data['image_url'] = snapshot.downloadURL;
+                    sendMessage(data, messageNode);
+                });
+            }   else {
+                sendMessage(data, messageNode);
+            }
         }
     }
     return 0;
 });
+
+function sendMessage(data, messageNode) {
+    messageNode.set(data).then(function() {
+        var messageBox = $('#message');
+        messageBox.prop('disabled', false);
+        messageBox.val('');
+        $('#image').val('');
+    });
+}
 
 
 

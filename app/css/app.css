@@ -34,3 +34,8 @@
 .message p.username {
     color: #ccc;
 }
+
+.message .content img {
+    width: 100% !important;
+    max-width: 200px;
+}
